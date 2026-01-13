@@ -1,7 +1,9 @@
 package paulodev.investmentsaggregator.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import paulodev.investmentsaggregator.controller.CreateUserDto;
+import paulodev.investmentsaggregator.dto.CreateUserDto;
+import paulodev.investmentsaggregator.dto.UpdateUserDto;
 import paulodev.investmentsaggregator.entity.User;
 import paulodev.investmentsaggregator.repository.UserRepository;
 
@@ -13,7 +15,7 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -41,6 +43,34 @@ public class UserService {
     public Optional<User> getUserById(String uuid) {
         return userRepository.findById(UUID.fromString(uuid));
     }
+
+    public void updateUserById(String uuid, UpdateUserDto updateUserDto) {
+        var id = UUID.fromString(uuid);
+        var userEntity = userRepository.findById(id);
+        if(userEntity.isPresent()) {
+            var user = userEntity.get();
+            if(updateUserDto.username() != null) {
+                user.setUsername(updateUserDto.username());
+            }
+            if(updateUserDto.password() != null) {
+                user.setPassword(updateUserDto.password());
+            }
+            if(updateUserDto.email() != null) {
+                user.setEmail(updateUserDto.email());
+            }
+            userRepository.save(user);
+        }
+    }
+
+    public void deleteById(String uuid) {
+        var id = UUID.fromString(uuid);
+        var userId = userRepository.existsById(id);
+        if (userId) {
+           userRepository.deleteById(id);
+        }
+    }
+
+
 
 
 }

@@ -2,12 +2,13 @@ package paulodev.investmentsaggregator.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import paulodev.investmentsaggregator.dto.CreateUserDto;
+import paulodev.investmentsaggregator.dto.UpdateUserDto;
 import paulodev.investmentsaggregator.entity.User;
 import paulodev.investmentsaggregator.service.UserService;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 // @RestController -> informa ao spring que essa classe possue endpoints da api
 // @RequestMapping -> define um caminho base para todos os endpoints da api
@@ -47,5 +48,17 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<User> updateUserById(@PathVariable("userId") String uuid, @RequestBody UpdateUserDto updateUserDto) {
+        userService.updateUserById(uuid, updateUserDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteById(@PathVariable("userId") String userId) {
+        userService.deleteById(userId);
+        return ResponseEntity.noContent().build();
     }
 }
