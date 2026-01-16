@@ -2,8 +2,8 @@ package paulodev.investmentsaggregator.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import paulodev.investmentsaggregator.dto.CreateUserDto;
-import paulodev.investmentsaggregator.dto.UpdateUserDto;
+import paulodev.investmentsaggregator.controller.dto.CreateUserDto;
+import paulodev.investmentsaggregator.controller.dto.UpdateUserDto;
 import paulodev.investmentsaggregator.entity.User;
 import paulodev.investmentsaggregator.service.UserService;
 

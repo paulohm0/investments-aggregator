@@ -1,9 +1,8 @@
 package paulodev.investmentsaggregator.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import paulodev.investmentsaggregator.dto.CreateUserDto;
-import paulodev.investmentsaggregator.dto.UpdateUserDto;
+import paulodev.investmentsaggregator.controller.dto.CreateUserDto;
+import paulodev.investmentsaggregator.controller.dto.UpdateUserDto;
 import paulodev.investmentsaggregator.entity.User;
 import paulodev.investmentsaggregator.repository.UserRepository;
 

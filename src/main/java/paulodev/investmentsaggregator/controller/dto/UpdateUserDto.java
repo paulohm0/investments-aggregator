@@ -1,4 +1,4 @@
-package paulodev.investmentsaggregator.dto;
+package paulodev.investmentsaggregator.controller.dto;
 
 public record UpdateUserDto(String username, String password, String email) {
 }
