@@ -1,10 +1,10 @@
-package paulodev.investmentsaggregator.service;
+package paulodev.investmentsaggregator.application.service;
 
 import org.springframework.stereotype.Service;
-import paulodev.investmentsaggregator.controller.dto.CreateUserDto;
-import paulodev.investmentsaggregator.controller.dto.UpdateUserDto;
-import paulodev.investmentsaggregator.entity.User;
-import paulodev.investmentsaggregator.repository.UserRepository;
+import paulodev.investmentsaggregator.application.dto.CreateUserDto;
+import paulodev.investmentsaggregator.application.dto.UpdateUserDto;
+import paulodev.investmentsaggregator.domain.model.entity.User;
+import paulodev.investmentsaggregator.domain.repository.UserRepository;
 
 import java.time.Instant;
 import java.util.List;

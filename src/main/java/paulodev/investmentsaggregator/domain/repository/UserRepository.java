@@ -1,8 +1,8 @@
-package paulodev.investmentsaggregator.repository;
+package paulodev.investmentsaggregator.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import paulodev.investmentsaggregator.entity.User;
+import paulodev.investmentsaggregator.domain.model.entity.User;
 
 import java.util.UUID;
 

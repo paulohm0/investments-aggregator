@@ -1,4 +1,4 @@
-package paulodev.investmentsaggregator.entity;
+package paulodev.investmentsaggregator.domain.model.valueobject;
 
 
 import jakarta.persistence.Column;

@@ -1,11 +1,11 @@
-package paulodev.investmentsaggregator.controller;
+package paulodev.investmentsaggregator.infra.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import paulodev.investmentsaggregator.controller.dto.CreateUserDto;
-import paulodev.investmentsaggregator.controller.dto.UpdateUserDto;
-import paulodev.investmentsaggregator.entity.User;
-import paulodev.investmentsaggregator.service.UserService;
+import paulodev.investmentsaggregator.application.dto.CreateUserDto;
+import paulodev.investmentsaggregator.application.dto.UpdateUserDto;
+import paulodev.investmentsaggregator.domain.model.entity.User;
+import paulodev.investmentsaggregator.application.service.UserService;
 
 import java.net.URI;
 import java.util.List;

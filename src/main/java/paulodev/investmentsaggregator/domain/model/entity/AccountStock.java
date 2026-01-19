@@ -1,6 +1,7 @@
-package paulodev.investmentsaggregator.entity;
+package paulodev.investmentsaggregator.domain.model.entity;
 
 import jakarta.persistence.*;
+import paulodev.investmentsaggregator.domain.model.valueobject.AccountStockId;
 
 @Entity
 @Table(name = "tb_accounts-stocks")
