@@ -2,6 +2,7 @@ package paulodev.investmentsaggregator.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +24,9 @@ public class Account {
     @OneToOne(mappedBy = "account")
     @PrimaryKeyJoinColumn
     private BillingAdreess billingAdreess;
+
+    @OneToMany(mappedBy = "account")
+    private List<AccountStock> accountStockList;
 
     public Account() {
     }
