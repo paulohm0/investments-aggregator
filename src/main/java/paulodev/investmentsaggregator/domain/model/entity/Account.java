@@ -21,9 +21,9 @@ public class Account {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "account")
     @PrimaryKeyJoinColumn
-    private BillingAdreess billingAdreess;
+    private BillingAddress billingAddress;
 
     @OneToMany(mappedBy = "account")
     private List<AccountStock> accountStockList;
@@ -31,9 +31,20 @@ public class Account {
     public Account() {
     }
 
-    public Account(String description, UUID accountId) {
-        this.description = description;
+    public Account(UUID accountId, User user, BillingAddress billingAddress,String description, List<AccountStock> accountStockList) {
         this.accountId = accountId;
+        this.billingAddress = billingAddress;
+        this.user = user;
+        this.description = description;
+        this.accountStockList = accountStockList;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getDescription() {
@@ -52,11 +63,19 @@ public class Account {
         this.accountId = accountId;
     }
 
-    public User getUser() {
-        return user;
+    public BillingAddress getBillingAddress() {
+        return billingAddress;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setBillingAddress(BillingAddress billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public List<AccountStock> getAccountStockList() {
+        return accountStockList;
+    }
+
+    public void setAccountStockList(List<AccountStock> accountStockList) {
+        this.accountStockList = accountStockList;
     }
 }

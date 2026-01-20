@@ -1,12 +1,22 @@
 package paulodev.investmentsaggregator.application.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import paulodev.investmentsaggregator.application.dto.CreateUserDto;
-import paulodev.investmentsaggregator.application.dto.UpdateUserDto;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import paulodev.investmentsaggregator.domain.model.dto.AccountResponseDTO;
+import paulodev.investmentsaggregator.domain.model.dto.CreateAccountDTO;
+import paulodev.investmentsaggregator.domain.model.dto.CreateUserDTO;
+import paulodev.investmentsaggregator.domain.model.dto.UpdateUserDTO;
+import paulodev.investmentsaggregator.domain.model.entity.Account;
+import paulodev.investmentsaggregator.domain.model.entity.BillingAddress;
 import paulodev.investmentsaggregator.domain.model.entity.User;
+import paulodev.investmentsaggregator.domain.repository.AccountRepository;
+import paulodev.investmentsaggregator.domain.repository.BillingAddressRepository;
 import paulodev.investmentsaggregator.domain.repository.UserRepository;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,12 +25,16 @@ import java.util.UUID;
 public class UserService {
 
     private UserRepository userRepository;
+    private AccountRepository accountRepository;
+    private BillingAddressRepository billingAddressRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AccountRepository accountRepository, BillingAddressRepository billingAddressRepository) {
         this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
+        this.billingAddressRepository = billingAddressRepository;
     }
 
-    public UUID createUser(CreateUserDto createUserDto) {
+    public UUID createUser(CreateUserDTO createUserDto) {
 
         // DTO -> ENTITY
         var entity = new User(
@@ -43,7 +57,7 @@ public class UserService {
         return userRepository.findById(UUID.fromString(uuid));
     }
 
-    public void updateUserById(String uuid, UpdateUserDto updateUserDto) {
+    public void updateUserById(String uuid, UpdateUserDTO updateUserDto) {
         var id = UUID.fromString(uuid);
         var userEntity = userRepository.findById(id);
         if(userEntity.isPresent()) {
@@ -69,7 +83,36 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void createAccount(String userId, CreateAccountDTO createAccountDTO) {
+        var user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+        var account = new Account(
+                null,
+                user,
+                null,
+                createAccountDTO.description(),
+                new ArrayList<>()
+        );
 
+        var accountCreated = accountRepository.save(account);
 
+        var billingAddress = new BillingAddress(
+                accountCreated.getAccountId(),
+                createAccountDTO.street(),
+                createAccountDTO.number(),
+                accountCreated
+        );
+
+        billingAddressRepository.save(billingAddress);
+    }
+
+    public List<AccountResponseDTO> getAccountsListByUser(String userId) {
+        var user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return user.getAccountList()
+                .stream()
+                .map(account -> new AccountResponseDTO(account.getAccountId().toString(), account.getDescription())).toList();
+    }
 }

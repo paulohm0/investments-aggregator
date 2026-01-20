@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tb_billing-adreess")
-public class BillingAdreess {
+public class BillingAddress {
 
     // esse ID sera o mesmo ID da Account
     @Id
@@ -19,18 +19,19 @@ public class BillingAdreess {
     @Column(name = "number")
     private Integer number;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId // id dessa classe sera recebido pelo outro lado da relação (Account)
     @JoinColumn(name = "account_id") // indica que esse campo sera um FK de outra tabela
     private Account account;
 
-    public BillingAdreess() {
+    public BillingAddress() {
     }
 
-    public BillingAdreess(UUID id, String street, Integer number) {
+    public BillingAddress(UUID id, String street, Integer number, Account account) {
         this.id = id;
         this.street = street;
         this.number = number;
+        this.account = account;
     }
 
     public UUID getId() {

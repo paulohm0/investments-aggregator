@@ -2,8 +2,10 @@ package paulodev.investmentsaggregator.infra.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import paulodev.investmentsaggregator.application.dto.CreateUserDto;
-import paulodev.investmentsaggregator.application.dto.UpdateUserDto;
+import paulodev.investmentsaggregator.domain.model.dto.AccountResponseDTO;
+import paulodev.investmentsaggregator.domain.model.dto.CreateAccountDTO;
+import paulodev.investmentsaggregator.domain.model.dto.CreateUserDTO;
+import paulodev.investmentsaggregator.domain.model.dto.UpdateUserDTO;
 import paulodev.investmentsaggregator.domain.model.entity.User;
 import paulodev.investmentsaggregator.application.service.UserService;
 
@@ -26,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<User> createUser(@RequestBody CreateUserDTO createUserDto) {
         var userId = userService.createUser(createUserDto);
         return ResponseEntity.created(URI.create("/users/" + userId.toString())).build();
     }
@@ -51,7 +53,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUserById(@PathVariable("userId") String uuid, @RequestBody UpdateUserDto updateUserDto) {
+    public ResponseEntity<User> updateUserById(@PathVariable("userId") String uuid, @RequestBody UpdateUserDTO updateUserDto) {
         userService.updateUserById(uuid, updateUserDto);
         return ResponseEntity.noContent().build();
     }
@@ -61,4 +63,17 @@ public class UserController {
         userService.deleteById(userId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{userId}/accounts")
+    public ResponseEntity<Void> createAccount(@PathVariable("userId") String userId, @RequestBody CreateAccountDTO createAccountDTO) {
+        userService.createAccount(userId, createAccountDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}/accounts")
+    public ResponseEntity<List<AccountResponseDTO>> getAccountsListByUser(@PathVariable("userId") String userId) {
+        var accounts = userService.getAccountsListByUser(userId);
+        return ResponseEntity.ok(accounts);
+    }
+
 }
