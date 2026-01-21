@@ -21,16 +21,16 @@ public class AccountStock {
     private Stock stock;
 
     @Column(name = "quantity")
-    private String quantity;
+    private Integer quantity;
 
     public AccountStock() {
     }
 
-    public AccountStock(AccountStockId id, String quantity, Stock stock, Account account) {
+    public AccountStock(AccountStockId id, Account account, Stock stock, Integer quantity) {
         this.id = id;
-        this.quantity = quantity;
-        this.stock = stock;
         this.account = account;
+        this.stock = stock;
+        this.quantity = quantity;
     }
 
     public AccountStockId getId() {
@@ -57,11 +57,11 @@ public class AccountStock {
         this.stock = stock;
     }
 
-    public String getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }
