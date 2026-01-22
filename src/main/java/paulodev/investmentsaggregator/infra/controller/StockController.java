@@ -14,13 +14,10 @@ import java.net.URI;
 @RequestMapping("/stocks")
 public class StockController {
 
-    @Autowired
-    private String apiToken;
     private StockService stockService;
 
     public StockController(StockService stockService, String apiToken) {
         this.stockService = stockService;
-        System.out.println("✅ TOKEN CARREGADO: " + apiToken);
     }
 
     @PostMapping

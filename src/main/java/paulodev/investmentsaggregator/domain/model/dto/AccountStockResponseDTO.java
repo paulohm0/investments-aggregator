@@ -1,4 +1,4 @@
 package paulodev.investmentsaggregator.domain.model.dto;
 
-public record AccountStockResponseDTO(String stockId, Integer quantity, double total) {
+public record AccountStockResponseDTO(String stockId, Integer quantity, String total) {
 }
