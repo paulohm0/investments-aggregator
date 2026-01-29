@@ -6,5 +6,4 @@ import paulodev.investmentsaggregator.domain.model.entity.Stock;
 
 
 @Repository
-public interface StockRepository extends JpaRepository<Stock, String> {
-}
+public interface StockRepository extends JpaRepository<Stock, String> { }

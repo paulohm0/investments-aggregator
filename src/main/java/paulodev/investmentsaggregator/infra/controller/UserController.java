@@ -2,10 +2,7 @@ package paulodev.investmentsaggregator.infra.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import paulodev.investmentsaggregator.domain.model.dto.AccountResponseDTO;
-import paulodev.investmentsaggregator.domain.model.dto.CreateAccountDTO;
-import paulodev.investmentsaggregator.domain.model.dto.CreateUserDTO;
-import paulodev.investmentsaggregator.domain.model.dto.UpdateUserDTO;
+import paulodev.investmentsaggregator.domain.model.dto.*;
 import paulodev.investmentsaggregator.domain.model.entity.User;
 import paulodev.investmentsaggregator.application.service.UserService;
 
@@ -14,46 +11,46 @@ import java.util.List;
 
 // @RestController -> informa ao spring que essa classe possue endpoints da api
 // @RequestMapping -> define um caminho base para todos os endpoints da api
-// @PostMapping -> informa que o método sera um endpoint HTTP post
-// @GetMapping -> informa que o método sera um endpoint HTTP get
+// @PostMapping -> informa que o métodoo sera um endpoint HTTP post
+// @GetMapping -> informa que o métodoo sera um endpoint HTTP get
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private UserService userService;
-
     public UserController(UserService userService) {
         this.userService =  userService;
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody CreateUserDTO createUserDto) {
+    public ResponseEntity<Void> createUser(@RequestBody CreateUserDTO createUserDto) {
         var userId = userService.createUser(createUserDto);
         return ResponseEntity.created(URI.create("/users/" + userId.toString())).build();
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         var usersList = userService.getUsersList();
-        return ResponseEntity.ok(usersList);
+        var usersDtoList = usersList.stream()
+                .map(user -> new UserResponseDTO(user))
+                .toList();
+        return ResponseEntity.ok(usersDtoList);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable("userId") String userId) {
-        try {
-            var userById = userService.getUserById(userId);
-            if (userById.isPresent()) {
-                return ResponseEntity.ok(userById.get());
-            }
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable("userId") String userId) {
+        var userById = userService.getUserById(userId);
+        if (userById.isPresent()) {
+            var userEntity = userById.get();
+            var userDTO =  new UserResponseDTO(userEntity);
+            return ResponseEntity.ok(userDTO);
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<User> updateUserById(@PathVariable("userId") String uuid, @RequestBody UpdateUserDTO updateUserDto) {
+    public ResponseEntity<Void> updateUserById(@PathVariable("userId") String uuid, @RequestBody UpdateUserDTO updateUserDto) {
         userService.updateUserById(uuid, updateUserDto);
         return ResponseEntity.noContent().build();
     }
@@ -73,7 +70,8 @@ public class UserController {
     @GetMapping("/{userId}/accounts")
     public ResponseEntity<List<AccountResponseDTO>> getAccountsListByUser(@PathVariable("userId") String userId) {
         var accounts = userService.getAccountsListByUser(userId);
-        return ResponseEntity.ok(accounts);
+        var accountsDTO = accounts.stream().map(account -> new AccountResponseDTO(account)).toList();
+        return ResponseEntity.ok(accountsDTO);
     }
 
 }

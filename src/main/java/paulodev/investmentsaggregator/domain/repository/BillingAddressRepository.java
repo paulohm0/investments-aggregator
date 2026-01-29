@@ -7,5 +7,4 @@ import paulodev.investmentsaggregator.domain.model.entity.BillingAddress;
 import java.util.UUID;
 
 @Repository
-public interface BillingAddressRepository extends JpaRepository<BillingAddress, UUID> {
-}
+public interface BillingAddressRepository extends JpaRepository<BillingAddress, UUID> { }

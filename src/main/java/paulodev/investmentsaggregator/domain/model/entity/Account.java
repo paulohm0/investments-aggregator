@@ -31,10 +31,10 @@ public class Account {
     public Account() {
     }
 
-    public Account(UUID accountId, User user, BillingAddress billingAddress,String description, List<AccountStock> accountStockList) {
+    public Account(UUID accountId, User user, BillingAddress billingAddress, String description, List<AccountStock> accountStockList) {
         this.accountId = accountId;
-        this.billingAddress = billingAddress;
         this.user = user;
+        this.billingAddress = billingAddress;
         this.description = description;
         this.accountStockList = accountStockList;
     }

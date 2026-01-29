@@ -86,33 +86,30 @@ public class UserService {
     @Transactional
     public void createAccount(String userId, CreateAccountDTO createAccountDTO) {
         var user = userRepository.findById(UUID.fromString(userId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         var account = new Account(
                 null,
                 user,
                 null,
                 createAccountDTO.description(),
-                new ArrayList<>()
-        );
+                new ArrayList<>());
 
         var accountCreated = accountRepository.save(account);
-
         var billingAddress = new BillingAddress(
                 accountCreated.getAccountId(),
                 createAccountDTO.street(),
                 createAccountDTO.number(),
-                accountCreated
-        );
+                accountCreated);
 
         billingAddressRepository.save(billingAddress);
     }
 
-    public List<AccountResponseDTO> getAccountsListByUser(String userId) {
+    public List<Account> getAccountsListByUser(String userId) {
         var user = userRepository.findById(UUID.fromString(userId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getAccountList()
                 .stream()
-                .map(account -> new AccountResponseDTO(account.getAccountId().toString(), account.getDescription())).toList();
+                .map(account -> new Account(account.getAccountId(),account.getUser(), account.getBillingAddress(), account.getDescription(), account.getAccountStockList())).toList();
     }
 }

@@ -1,10 +1,9 @@
 package paulodev.investmentsaggregator.application.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import paulodev.investmentsaggregator.client.BrapiClient;
+import paulodev.investmentsaggregator.infra.client.BrapiClient;
+import paulodev.investmentsaggregator.domain.exception.InvestmentsAggregatorExceptions;
 import paulodev.investmentsaggregator.domain.model.dto.AccountStockResponseDTO;
 import paulodev.investmentsaggregator.domain.model.dto.AssociateAccountStockDTO;
 import paulodev.investmentsaggregator.domain.model.entity.AccountStock;
@@ -28,27 +27,31 @@ public class AccountService {
     private StockRepository stockRepository;
     private AccountStockRepository accountStockRepository;
 
-    public AccountService(AccountRepository accountRepository, StockRepository stockRepository, AccountStockRepository accountStockRepository, BrapiClient brapiClient) {
-        this.accountRepository = accountRepository;
-        this.stockRepository = stockRepository;
-        this.accountStockRepository = accountStockRepository;
-        this.brapiClient = brapiClient;
+    public AccountService(
+            AccountRepository accountRepository,
+            StockRepository stockRepository,
+            AccountStockRepository accountStockRepository,
+
+            BrapiClient brapiClient) {
+                this.accountRepository = accountRepository;
+                this.stockRepository = stockRepository;
+                this.accountStockRepository = accountStockRepository;
+                this.brapiClient = brapiClient;
     }
 
     public void associateStock(String accountId, AssociateAccountStockDTO associateAccountStockDTO) {
 
         var account = accountRepository.findById(UUID.fromString(accountId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new InvestmentsAggregatorExceptions.AccountNotFoundException(accountId));
         var stock = stockRepository.findById(associateAccountStockDTO.stockId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new InvestmentsAggregatorExceptions.StockNotFoundException(associateAccountStockDTO.stockId()));
 
         var id = new AccountStockId(account.getAccountId(), stock.getStockId());
         var entity = new AccountStock(
                 id,
                 account,
                 stock,
-                associateAccountStockDTO.quantity()
-        );
+                associateAccountStockDTO.quantity());
 
         accountStockRepository.save(entity);
     }
@@ -56,7 +59,7 @@ public class AccountService {
     public List<AccountStockResponseDTO> getListStocks(String accountId) {
 
         var account = accountRepository.findById(UUID.fromString(accountId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new InvestmentsAggregatorExceptions.AccountNotFoundException(accountId));
 
         return account.getAccountStockList()
                 .stream()

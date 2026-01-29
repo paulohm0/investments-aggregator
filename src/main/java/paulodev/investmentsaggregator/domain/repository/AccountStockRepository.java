@@ -6,5 +6,4 @@ import paulodev.investmentsaggregator.domain.model.entity.AccountStock;
 import paulodev.investmentsaggregator.domain.model.valueobject.AccountStockId;
 
 @Repository
-public interface AccountStockRepository extends JpaRepository<AccountStock, AccountStockId> {
-}
+public interface AccountStockRepository extends JpaRepository<AccountStock, AccountStockId> { }
